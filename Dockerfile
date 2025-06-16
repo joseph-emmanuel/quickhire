@@ -1,4 +1,4 @@
-# Use official PHP image
+# Use official PHP image with CLI tools
 FROM php:8.2-cli
 
 # Install system dependencies + Node.js
@@ -20,24 +20,21 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
-# Create .env file from example
+# Copy .env file
 COPY .env.example .env
 
-# Install backend dependencies
+# Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Clean npm cache and install frontend dependencies
+# Clear and rebuild frontend assets
 RUN rm -rf node_modules package-lock.json && npm cache clean --force
 RUN npm install && npm run build
 
 # Generate Laravel app key
 RUN php artisan key:generate
 
-# Copy built assets to public (make sure manifest.json is in /public/build)
-RUN cp -r public/build /var/www/public/build
-
 # Expose port
 EXPOSE 8000
 
-# Start Laravel server
+# Start Laravel app
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
