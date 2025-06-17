@@ -35,6 +35,7 @@ RUN php artisan key:generate
 
 # Expose port
 EXPOSE 8000
+RUN ls -alh public/build && cat public/build/manifest.json
 
 # Start Laravel app
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
