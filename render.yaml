@@ -1,0 +1,17 @@
+
+services:
+  - type: web
+    name: quickhire-laravel
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    buildFilter:
+      paths: ["Dockerfile", ".render/*"]
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: ASSET_URL
+        value: https://quickhire-pcgb.onrender.com
